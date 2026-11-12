@@ -67,6 +67,10 @@ $$\Pi L_k\Pi=\lambda_k\Pi,\qquad \Pi L_k^\dagger L_j\Pi=\mu_{kj}\Pi,\qquad \Pi G
 
 **Theorem (HNLS; Zhou, Zhang, Preskill, Jiang 2018; Demkowicz-Dobrzański, Czajkowski, Sekatski 2017).** With noiseless ancillas and arbitrarily fast, perfect control, the HL in $T$ is attainable if and only if $G\notin\mathcal S$ ("Hamiltonian not in Lindblad span"). The optimal QFI is $F(T)=4T^2\min_{S\in\mathcal S}\lVert G-S\rVert^2$ (operator norm), and the optimal code is found by a semidefinite program. If $G\in\mathcal S$, then $F(T)=O(T)$ for every protocol.
 
+![Figure 1](figures/fig1_hnls.svg)
+
+**Figure 1. The HNLS condition and what it buys.** (a) Schematic. The signal generator $G$ is split into a component $G_\parallel$ inside the Lindblad span $\mathcal S$, which any code correcting the noise also removes, and a component $G_\perp$ outside it, which survives. The Heisenberg limit is attainable if and only if $G_\perp\neq0$. (b) Total Fisher information against total sensing time in the elementary model where the Ramsey contrast decays as $e^{-\Gamma t}$ and cycles are repeated optimally: $F=T^2e^{-2\Gamma T}$ for $T\le1/2\Gamma$ and $F=T/(2e\Gamma)$ beyond. Error correction with a residual logical error rate $\Gamma_L$ (here $10^{-3}\Gamma$) keeps the form of the curve and moves the crossover to $T^\star\sim1/\Gamma_L$; under exact HNLS and ideal recovery, $\Gamma_L\to0$ and the curve follows the noiseless reference.
+
 The other papers you supplied extend this result:
 
 | Paper | Contribution | Assumptions retained |
@@ -110,6 +114,10 @@ The other papers you supplied extend this result:
 
 An error-corrected sensing protocol is specified by nine choices. The last column marks where published work is concentrated.
 
+![Figure 2](figures/fig2_pipeline.svg)
+
+**Figure 2. Anatomy of an error-corrected sensing protocol.** The quantum layer (grey) is where existing theory is concentrated. The classical layer (blue) converts the syndrome record $s$ into recovery operations and, together with the readout $x$, into the estimate. The thick arrow is the syndrome-aware path, in which the record is passed to the estimator and not only to the recovery.
+
 | Axis | Options | Coverage |
 |---|---|---|
 | 1. Task | single parameter; several parameters; a function of parameters; detection (hypothesis test); waveform | single parameter dominant; detection and functions open |
@@ -152,6 +160,10 @@ $$p_\theta(x\mid\text{history})=\tfrac12\big[1+x\,r\,\sin(\lambda\theta\tau)\big
 
 The history enters only through the pair $(r,\tau)$: one bit and one real number.
 
+![Figure 3](figures/fig3_interrogation_time.svg)
+
+**Figure 3. A known error changes the gain, not the information.** Top row: gain $g(E(t))$ of the current error frame. Bottom row: its running integral, whose final value is the signed interrogation time $\tau$. (a) An error of class T (defined in Proposition C) reverses the accumulation until it is corrected after a delay $\tau_d$; the loss is $2\tau_d$. (b) With no recovery the sign keeps alternating, yet $\tau$ is still known from the record. (c) An error of class P leaves the accumulation untouched and only flips the sign of the final outcome. Schematic.
+
 **Proposition B (optimal decoder output and the cost of any other decoder).** Define the **posterior weight** $w(s)=\mathbb E[\,r\tau\mid s\,]$. Then, at $\theta=0$:
 
 $$F_{\rm aware}=\lambda^2\,\mathbb E_s\big[w(s)^2\big],\qquad \hat\theta=\frac{\sum_ix_i\,w(s_i)}{\lambda\sum_iw(s_i)^2}\ \text{ is locally efficient.}$$
@@ -177,7 +189,15 @@ A syndrome-agnostic estimator corresponds to constant $\hat w$ and gives $F_{\rm
 - **E3. No recovery at all, only tracking** (errors of class T at rate $\Gamma$, perfect syndromes): $F_{\rm aware}=\lambda^2\big[T/\Gamma-(1-e^{-2\Gamma T})/(2\Gamma^2)\big]$, while $F_{\rm agn}=\lambda^2\big[(1-e^{-2\Gamma T})/(2\Gamma)\big]^2$, which saturates. The best Fisher-information rates are $\lambda^2/\Gamma$ and $0.204\,\lambda^2/\Gamma$: a factor $4.9$ from inference alone, with no physical correction.
 - **E4. Recovery with latency $\tau_d$:** the mean gain is $\bar g=(1-\Gamma\tau_d)/(1+\Gamma\tau_d)$ and $F\simeq\bar g^2\lambda^2T^2$ to first order in $\Gamma\tau_d$. HL scaling survives with a reduced prefactor. A syndrome-agnostic estimator is biased by the factor $\bar g$; this is the kind of bias identified by Rojkov et al.
 - **E5. Repetition code, $G=\tfrac12\sum_iZ_i$, bit-flip pattern $e$:** $g=1-2\lvert e\rvert/n$. Only the Hamming weight of the error matters, not its location.
-- **E6. Hidden-Markov toy model** (tracking only, flip probability $0.03$ per step, syndrome error $0.12$, 40 steps): posterior weights give $F/T^2=0.505$; hard decisions lose $0.15\%$; the raw syndrome sum loses $2.5\%$; the syndrome-agnostic estimator retains only $29\%$.
+- **E6. Hidden-Markov toy model** (tracking only, flip probability $0.03$ per step, syndrome error $0.12$, 40 steps): posterior weights give $F/T^2=0.505$; hard decisions lose about $0.1\%$; the raw syndrome sum loses $2.4\%$; the syndrome-agnostic estimator retains only $29\%$ (Figure 5).
+
+![Figure 4](figures/fig4_fisher_vs_time.svg)
+
+**Figure 4. What inference alone achieves.** Fisher information against interrogation time for class-T errors at rate $\Gamma$, from the closed-form expressions of examples E1, E3 and E4. Delayed recovery keeps Heisenberg scaling with a smaller prefactor. With no recovery at all, using the syndrome record still gives linear growth, whereas ignoring the record lets the information saturate.
+
+![Figure 5](figures/fig5_decoder_weights.svg)
+
+**Figure 5. The decoder output as a per-shot weight** (toy model E6, $1.2\times10^5$ simulated shots). (a) Distribution of the posterior weight $w(s)/T$. About $30\%$ of the shots are inferred to be error-free and carry full weight; the others carry less, and some carry negative weight. A syndrome-agnostic estimator gives every shot the same weight (vertical line). (b) Fraction of the syndrome-aware Fisher information retained when the posterior weight is replaced by a cheaper decoder output.
 
 **Assessment.** The idea is correct. Its precise form is: *what must be accurate is the inference of $(r,\tau)$, and for local estimation only its posterior mean; what is physically applied affects only the gain.* A recovery that is "wrong" in the computing sense is harmless if it is of class N, costless in information if it is known (classes P and T), and costly only in gain while a class-T frame persists. Note the limit of the idea: for a single logical qubit without gauge freedom, all three nontrivial logical Paulis are sensing-relevant, so the number of classes is not reduced; the saving lies in *when* and *how accurately* each must be resolved.
 
@@ -191,6 +211,10 @@ A syndrome-agnostic estimator corresponds to constant $\hat w$ and gives $F_{\rm
 - *Not necessary.* If $\Lambda_\theta=\mathcal V\circ\mathcal U_{\bar g\theta}$ with a known unitary $\mathcal V$ and a known gain $\bar g\approx1$, the fidelity to $\mathcal U_\theta$ can be arbitrarily small at large $\theta T$, yet the QFI is $\bar g^2$ times the ideal value.
 
 Fidelity compares $\Lambda_\theta$ with $\mathcal U_\theta$ pointwise in $\theta$. Sensing depends on how $\Lambda_\theta$ *varies* with $\theta$, and is invariant under known post-processing.
+
+![Figure 6](figures/fig6_fidelity_vs_information.svg)
+
+**Figure 6. Logical fidelity and sensing performance are different axes.** Top: the two blue cells are the counterexamples given above, in which the two measures disagree. Bottom: the metrological fidelity defined below factorises into the contributions of the code, of the noise and recovery policy, and of the decoder.
 
 **Existing fragments.** Signal gain $A$ and dephasing $B$ with $\eta=(\sqrt B/A)\sqrt{2e/T_2}$ (Zhou, Layden et al. 2019); renormalised signal and decoherence rates (Ott et al.); distances $d_{\rm sig},d_{\rm comp}$ (Chen et al.); a Fisher-information-matched "effective logical error rate" for states (Tsubouchi et al.); thresholds (Sahu et al.; Conlon et al.).
 
@@ -236,7 +260,7 @@ Each proposal states the question, a formal formulation, the prior art with a no
 2. *Latency law.* For class-T errors at rate $\Gamma$, $F=\bar g(\pi)^2\lambda^2T^2+O(T)$ with $\bar g\simeq1-2\Gamma(\tau_d+p_{\rm mis}\tau_{\rm fix})$, where $\tau_{\rm fix}$ is the time until an offline pass detects the wrong action. Latency degrades the HL prefactor, not the scaling.
 3. *Tracking-only law.* With no action at all, $F\to\lambda^2T/\Gamma$: SQL scaling in $T$, but without exponential loss of contrast.
 
-**Algorithmic consequence: two-tier decoding.** Use a fast, approximate real-time decoder to choose actions, and an accurate offline *smoother* (which also uses syndromes recorded after each event) to compute $w(s)$. Mistakes of the fast tier cost gain only. This differs from fault-tolerant computing, where a real-time decoding error before a non-Clifford gate is not recoverable.
+**Algorithmic consequence: two-tier decoding (Figure 7).** Use a fast, approximate real-time decoder to choose actions, and an accurate offline *smoother* (which also uses syndromes recorded after each event) to compute $w(s)$. Mistakes of the fast tier cost gain only. This differs from fault-tolerant computing, where a real-time decoding error before a non-Clifford gate is not recoverable.
 
 **Connection to continuous QEC.** The "spurious Hamiltonian evolution" in the error subspace noted by Convy et al. and Atalaya et al. is, in sensing, proportional to the unknown $\theta$ and has known sign; it is therefore tracked by $\tau$ and need not be counted as a logical error.
 
@@ -245,6 +269,10 @@ Each proposal states the question, a formal formulation, the prior art with a no
 **Prior art and novelty.** Pauli-frame tracking and latency are standard in computing. In sensing: bias from finite QEC rate (Rojkov et al.), finite-rate limits (Shettell et al.), sign tracking in one model (Conlon et al.). I found no latency law, no no-feedback theorem, and no two-tier proposal. Novelty: high.
 
 **Risk.** The laws are first order in $\Gamma\tau_d$; a second error during the latency window produces genuine logical errors and must be bounded.
+
+![Figure 7](figures/fig7_two_tier_decoding.svg)
+
+**Figure 7. Two-tier decoding.** A fast decoder chooses recovery operations in real time; an accurate offline decoder computes the weight $w(s)$ from the complete record. A mistake of the first tier lowers the gain for a time but is seen by the second tier, so it does not bias the estimate.
 
 ### P3. Figures of merit and benchmarking for logical sensors
 
@@ -275,6 +303,10 @@ Each proposal states the question, a formal formulation, the prior art with a no
 $$\lvert\phi_+\rvert=2A_d\,(\epsilon/2)^d+O(\epsilon^{d+2}),$$
 
 where $A_d$ is the number of weight-$d$ representatives of $\bar Z$. The logical signal is therefore governed by the **weight enumerator** of the logical coset. For $d=3$, a syndrome pointing to qubit $i$ gives a logical rotation of magnitude $\lvert\phi_-^{(i)}\rvert=\nu_i\epsilon$ with sign opposite to $\phi_+$, where $\nu_i$ is the number of weight-3 logical operators containing qubit $i$.
+
+![Figure 8](figures/fig8_correlation_filter.svg)
+
+**Figure 8. Error correction as a correlation filter** (after Ott et al. 2026). (a) For the Steane code, a collective kick of angle $\epsilon$ usually triggers no check and leaves a logical phase of order $\epsilon^3$, whereas a local error triggers a check and is removed without a logical phase. (b) Total Fisher information per expected signal event for the three strategies compared by Ott et al., from their asymptotic expressions (their Eqs. 3, 4 and 7), valid for $\epsilon\ll1/n$. Logical sensing is the best of the three when the kicks are weak and the noise rate exceeds the event rate.
 
 **Observation (my derivation under the approximations of Ott et al.; it reproduces their Steane-code values $\phi_+$, $\phi_-$ and their constant 7).** Define the signal-to-self-noise ratio $\rho(\mathcal C)=\lim_{\epsilon\to0}(\partial_\epsilon\bar\phi)^2/\sigma_\phi^2$, so that the total Fisher information in the limit $\delta t\to0$ is $\rho(\mathcal C)\,RT/e$. For distance-3 CSS codes with $Z$-stabilizer weight at least 4,
 
@@ -317,6 +349,10 @@ with equality if and only if the $\nu_i$ are uniform. Hence, with syndrome-agnos
 $$\Pi E_a^\dagger E_b\Pi=I_L\otimes g_{ab},\qquad \Pi(v\cdot G)\Pi=I_L\otimes n_v\ \ \forall v\perp w,\qquad \Pi(w\cdot G)\Pi=h_L\otimes I_G+I_L\otimes n_w,\ \ h_L\not\propto I .$$
 
 The first condition is the subsystem Knill–Laflamme condition of Liu and Zhou. The second lets the nuisance generators act arbitrarily on the gauge factor. Then the reduced logical state depends on $\theta$ only through $f$, with no need to detect, freeze, or estimate the nuisance parameters.
+
+![Figure 9](figures/fig9_feature_subsystem.svg)
+
+**Figure 9. A feature-sufficient subsystem code.** The generator of the wanted feature acts on the logical factor; nuisance generators and correctable noise act only on the gauge factor, which is never decoded.
 
 **Programme.**
 1. Existence. A corollary of the necessity argument of Górecki et al. is that $f$ is HL-estimable if and only if $w\in\operatorname{range}(M^{\mathsf T})$, where $M:\theta\mapsto\sum_\mu\theta_\mu(G_\mu)_\perp$. Verify, and determine when the gauge relaxation above is achievable.
@@ -371,6 +407,7 @@ Sensing decoding is therefore a **scalar regression** problem, and the excess tr
 2. Five 2026 preprints (arXiv:2601.05457, 2603.05145, 2605.08341, 2606.19628, 2608.00171) and arXiv:2512.20426 were read only in part: abstract and main sections verbatim, later sections and appendices through automatically extracted summaries. In particular, the statement that Conlon et al. weight their estimator by a syndrome-conditional statistic comes from such a summary. **Their appendices should be read in full before claiming priority for P1 or P2.**
 3. Propositions A–C, the examples E3–E6, and the bound $\rho(\mathcal C)\le n$ are my own derivations. They were checked numerically on toy models and against the published Steane-code constants, but not proved with error bounds and not reviewed.
 4. Supplemental material of Ott et al. was not available to me.
+5. Figures 1a, 2, 3, 6, 7, 8a and 9 are schematic. Figures 1b, 4 and 8b plot closed-form expressions quoted in the text. Figure 5 is a simulation. All are regenerated by `figures/make_figures.py`.
 
 ---
 
